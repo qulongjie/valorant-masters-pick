@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import type { Team } from '../data/teams';
 import type { Match } from '../data/matches';
 import type { Prediction } from '../lib/storage';
@@ -6,6 +6,7 @@ import { TEAM_LOGO_URLS } from './TeamLogos';
 import { Download, Link, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
+import QRCode from 'qrcode';
 
 interface SharePosterProps {
   favoriteTeam: Team | null;
@@ -26,21 +27,31 @@ export const SharePoster: React.FC<SharePosterProps> = ({
 }) => {
   const posterRef = useRef<HTMLDivElement>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
+
+  // Generate QR code
+  useEffect(() => {
+    const url = window.location.origin + '/?ref=pick';
+    QRCode.toDataURL(url, {
+      width: 96,
+      margin: 1,
+      color: { dark: '#000000', light: '#ffffff' },
+      errorCorrectionLevel: 'M',
+    }).then(setQrDataUrl).catch(console.error);
+  }, []);
 
   const handleCopyLink = () => {
-    const dummyUrl = window.location.origin + "/?ref=masters_pick_9527";
-    navigator.clipboard.writeText(dummyUrl).then(() => {
-      onShowToast("分享链接复制成功，快发给好友吧！", "success");
+    const url = window.location.origin + '/?ref=pick';
+    navigator.clipboard.writeText(url).then(() => {
+      onShowToast("链接已复制，快发给好友吧！", "success");
       confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
-    }).catch(() => {
-      onShowToast("链接复制失败，请重试", "info");
-    });
+    }).catch(() => onShowToast("复制失败，请手动复制", "info"));
   };
 
   const handleDownloadPoster = async () => {
     if (!posterRef.current || isSaving) return;
     setIsSaving(true);
-    onShowToast("正在生成海报，请稍候...", "info");
+    onShowToast("正在生成海报...", "info");
 
     try {
       const canvas = await html2canvas(posterRef.current, {
@@ -49,7 +60,6 @@ export const SharePoster: React.FC<SharePosterProps> = ({
         useCORS: true,
         allowTaint: true,
         logging: false,
-        removeContainer: true,
       });
       const link = document.createElement('a');
       link.download = `valorant_pick_${Date.now()}.png`;
@@ -57,12 +67,10 @@ export const SharePoster: React.FC<SharePosterProps> = ({
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
       onShowToast("🎉 海报已保存！", "success");
       confetti({ particleCount: 60, spread: 80, origin: { y: 0.7 } });
     } catch (err) {
-      console.error('Poster generation failed:', err);
-      // Fallback: use native screenshot
+      console.error(err);
       onShowToast("生成失败，请长按截图保存", "info");
     } finally {
       setIsSaving(false);
@@ -84,7 +92,6 @@ export const SharePoster: React.FC<SharePosterProps> = ({
 
   return (
     <div className="w-full flex flex-col items-center select-none page-enter">
-      {/* Poster Card */}
       <div 
         ref={posterRef}
         className="w-full max-w-[340px] aspect-[9/16] rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between"
@@ -97,31 +104,21 @@ export const SharePoster: React.FC<SharePosterProps> = ({
         {/* Top glow */}
         <div className="absolute top-[-15%] left-[-10%] w-[120%] h-[40%] pointer-events-none z-0"
              style={{ background: 'radial-gradient(ellipse, rgba(255,59,69,0.12) 0%, transparent 70%)' }} />
-
-        {/* Skyline silhouette (simple gradient) */}
         <div className="absolute bottom-0 left-0 right-0 h-[25%] pointer-events-none z-0"
              style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.03) 0%, transparent 100%)' }} />
 
         {/* Header */}
         <div className="flex flex-col items-center pb-3 relative z-10"
              style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <div className="text-[10px] font-black text-valorant uppercase" style={{ letterSpacing: '0.25em' }}>
-            VALORANT MASTERS
-          </div>
-          <div className="text-[14px] font-black text-white uppercase mt-0.5 font-mono" style={{ letterSpacing: '0.35em' }}>
-            LONDON 2026
-          </div>
+          <div className="text-[10px] font-black text-valorant uppercase" style={{ letterSpacing: '0.25em' }}>VALORANT MASTERS</div>
+          <div className="text-[14px] font-black text-white uppercase mt-0.5 font-mono" style={{ letterSpacing: '0.35em' }}>LONDON 2026</div>
         </div>
 
-        {/* Central — Logo */}
+        {/* Central Logo */}
         <div className="flex flex-col items-center my-auto py-2 relative z-10">
-          <div className="text-[8px] font-black text-grey-secondary uppercase mb-3" style={{ letterSpacing: '0.3em' }}>
-            我的冠军预测
-          </div>
-
+          <div className="text-[8px] font-black text-grey-secondary uppercase mb-3" style={{ letterSpacing: '0.3em' }}>我的冠军预测</div>
           <div className={`w-[120px] h-[120px] rounded-full bg-gradient-to-br ${displayTeam.color} p-[3px] flex items-center justify-center`}>
-            <div className="w-full h-full rounded-full bg-dark flex items-center justify-center overflow-hidden"
-                 style={{ backgroundColor: '#05070A' }}>
+            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#05070A' }}>
               {favoriteLogo ? (
                 <img src={favoriteLogo} alt={displayTeam.name} className="w-24 h-24 object-contain" crossOrigin="anonymous" />
               ) : (
@@ -129,23 +126,15 @@ export const SharePoster: React.FC<SharePosterProps> = ({
               )}
             </div>
           </div>
-
-          <div className="mt-3 text-xl font-black text-white uppercase" style={{ letterSpacing: '0.15em' }}>
-            {displayTeam.name}
-          </div>
-          <div className="text-[9px] text-grey-secondary font-bold uppercase mt-0.5" style={{ letterSpacing: '0.15em' }}>
-            {displayTeam.fullName}
-          </div>
+          <div className="mt-3 text-xl font-black text-white uppercase" style={{ letterSpacing: '0.15em' }}>{displayTeam.name}</div>
+          <div className="text-[9px] text-grey-secondary font-bold uppercase mt-0.5" style={{ letterSpacing: '0.15em' }}>{displayTeam.fullName}</div>
         </div>
 
         {/* Prediction Card */}
         <div className="relative z-10 mb-2">
           {hasPredict ? (
-            <div className="rounded-xl p-3.5"
-                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <div className="text-[8px] font-black text-grey-secondary uppercase mb-2 text-center" style={{ letterSpacing: '0.15em' }}>
-                比赛预测
-              </div>
+            <div className="rounded-xl p-3.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div className="text-[8px] font-black text-grey-secondary uppercase mb-2 text-center" style={{ letterSpacing: '0.15em' }}>比赛预测</div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {teamALogo && <img src={teamALogo} alt={teamA!.name} className="w-8 h-8 object-contain" crossOrigin="anonymous" />}
@@ -161,61 +150,39 @@ export const SharePoster: React.FC<SharePosterProps> = ({
                 </div>
               </div>
               <div className="text-[8px] text-grey-secondary mt-2.5 rounded leading-normal pl-2"
-                   style={{ background: 'rgba(255,255,255,0.02)', borderLeft: '2px solid var(--color-valorant)' }}>
+                   style={{ background: 'rgba(255,255,255,0.02)', borderLeft: '2px solid #FF3B45' }}>
                 看好：大众 61% 的玩家认为 {matchPrediction?.winnerTeamId === teamA?.id ? teamA?.name : teamB?.name} 将赢得比赛。
               </div>
             </div>
           ) : (
             <div className="flex flex-col items-center py-3">
-              <Award className="w-5 h-5 text-grey-secondary mb-1.5" style={{ opacity: 0.4 }} />
-              <p className="text-[9px] text-grey-secondary font-bold uppercase" style={{ letterSpacing: '0.15em' }}>
-                当前尚未提交今日赛程预测
-              </p>
-              <p className="text-[8px] font-semibold mt-1" style={{ color: 'rgba(160,166,178,0.5)' }}>
-                去赛事预测投出你的一票，生成专属战报！
-              </p>
+              <Award className="w-5 h-5 mb-1.5" style={{ color: 'rgba(160,166,178,0.4)' }} />
+              <p className="text-[9px] text-grey-secondary font-bold uppercase" style={{ letterSpacing: '0.15em' }}>当前尚未提交今日赛程预测</p>
+              <p className="text-[8px] font-semibold mt-1" style={{ color: 'rgba(160,166,178,0.5)' }}>去赛事预测投出你的一票，生成专属战报！</p>
             </div>
           )}
         </div>
 
-        {/* Bottom QR */}
+        {/* Bottom QR — 真实二维码 */}
         <div className="flex items-center justify-between pt-3 mt-1 relative z-10"
              style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
           <div className="flex flex-col text-left flex-1 mr-4">
-            <span className="text-[9px] text-grey-secondary font-bold uppercase mb-1" style={{ letterSpacing: '0.15em' }}>
-              全民 PICK 娱乐赛
-            </span>
-            <span className="text-[11px] font-black text-white" style={{ letterSpacing: '0.1em' }}>
-              扫码参与赛事预测
-            </span>
-            <span className="text-[9px] text-grey-secondary font-medium mt-0.5" style={{ letterSpacing: '0.1em' }}>
-              为你的主队加油投票！
-            </span>
+            <span className="text-[9px] text-grey-secondary font-bold uppercase mb-1" style={{ letterSpacing: '0.15em' }}>全民 PICK 娱乐赛</span>
+            <span className="text-[11px] font-black text-white" style={{ letterSpacing: '0.1em' }}>扫码参与赛事预测</span>
+            <span className="text-[9px] text-grey-secondary font-medium mt-0.5" style={{ letterSpacing: '0.1em' }}>为你的主队加油投票！</span>
           </div>
-          <div className="w-12 h-12 rounded-lg p-1 flex items-center justify-center relative"
+          <div className="w-14 h-14 rounded-lg p-1 flex items-center justify-center relative flex-shrink-0"
                style={{ background: 'white', border: '1px solid rgba(255,255,255,0.15)' }}>
             {/* Red corner decorations */}
             <div className="absolute -top-1 -left-1 w-2 h-2" style={{ borderTop: '2px solid #FF3B45', borderLeft: '2px solid #FF3B45' }} />
             <div className="absolute -top-1 -right-1 w-2 h-2" style={{ borderTop: '2px solid #FF3B45', borderRight: '2px solid #FF3B45' }} />
             <div className="absolute -bottom-1 -left-1 w-2 h-2" style={{ borderBottom: '2px solid #FF3B45', borderLeft: '2px solid #FF3B45' }} />
             <div className="absolute -bottom-1 -right-1 w-2 h-2" style={{ borderBottom: '2px solid #FF3B45', borderRight: '2px solid #FF3B45' }} />
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              <rect x="0" y="0" width="30" height="30" fill="#000"/>
-              <rect x="5" y="5" width="20" height="20" fill="#fff"/>
-              <rect x="10" y="10" width="10" height="10" fill="#000"/>
-              <rect x="70" y="0" width="30" height="30" fill="#000"/>
-              <rect x="75" y="5" width="20" height="20" fill="#fff"/>
-              <rect x="80" y="10" width="10" height="10" fill="#000"/>
-              <rect x="0" y="70" width="30" height="30" fill="#000"/>
-              <rect x="5" y="75" width="20" height="20" fill="#fff"/>
-              <rect x="10" y="80" width="10" height="10" fill="#000"/>
-              <rect x="40" y="10" width="10" height="30" fill="#000"/>
-              <rect x="50" y="20" width="15" height="10" fill="#000"/>
-              <rect x="40" y="50" width="20" height="15" fill="#000"/>
-              <rect x="75" y="45" width="15" height="15" fill="#000"/>
-              <rect x="70" y="80" width="20" height="10" fill="#000"/>
-              <rect x="45" y="85" width="10" height="10" fill="#000"/>
-            </svg>
+            {qrDataUrl ? (
+              <img src={qrDataUrl} alt="QR Code" className="w-full h-full object-contain rounded" />
+            ) : (
+              <div className="w-full h-full bg-gray-100 rounded animate-pulse" />
+            )}
           </div>
         </div>
 
@@ -224,7 +191,7 @@ export const SharePoster: React.FC<SharePosterProps> = ({
         </p>
       </div>
 
-      {/* Action buttons */}
+      {/* Actions */}
       <div className="w-full max-w-[340px] grid grid-cols-2 gap-3 mt-5">
         <button
           onClick={handleDownloadPoster}
