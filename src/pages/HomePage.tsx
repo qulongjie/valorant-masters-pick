@@ -22,7 +22,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       <div className="relative w-full rounded-2xl overflow-hidden mb-4" style={{ aspectRatio: '16/7' }}>
         {/* Background photo */}
         <img
-          src="/hero_banner.png"
+          src={`${import.meta.env.BASE_URL}hero_banner.png`}
           alt="Valorant Masters London 2026"
           className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
