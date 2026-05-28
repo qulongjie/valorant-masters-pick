@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #05070A;
+    color: #FFFFFF;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(8, 11, 16, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 59, 69, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 59, 69, 0.6);
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(15, 18, 24, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-glow {
+  background: rgba(15, 18, 24, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 59, 69, 0.25);
+  box-shadow: 0 0 15px rgba(255, 59, 69, 0.15);
+}
+
+/* Centered H5 Layout Container */
+.h5-container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #05070A;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow-x: hidden;
+}
+
+/* London City Skyline Backdrop Overlay */
+.london-skyline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 220px;
+  opacity: 0.08;
+  pointer-events: none;
+  background-repeat: repeat-x;
+  background-position: bottom;
+  background-size: 400px 220px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220' fill='%23FFFFFF'><path d='M0,220 L400,220 L400,200 L380,200 L380,180 L360,180 L360,150 L340,150 L340,220 M120,220 L120,130 L130,120 L140,120 L150,130 L150,220 M60,220 L60,80 L70,80 L70,50 L75,50 L75,40 L70,40 L70,30 L65,30 L65,10 L60,30 L55,30 L55,40 L50,40 L50,50 L55,50 L55,80 L60,80 M240,220 C240,170 280,170 280,220 M260,220 C260,190 280,190 280,220 M200,220 L200,120 L220,120 L220,220 M300,220 L300,100 L310,95 L320,100 L320,220 M20,220 L20,140 L35,120 L50,140 L50,220 Z' opacity='0.4'/><circle cx='260' cy='220' r='45' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-dasharray='3,3' opacity='0.4'/></svg>");
+}
+
+/* Valorant angled cuts */
+.slanted-cut-br {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+}
+
+.slanted-cut-tl {
+  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+}
+
+/* Custom background glows */
+.radial-glow {
+  background: radial-gradient(circle at 50% -20%, rgba(255, 59, 69, 0.15) 0%, rgba(5, 7, 10, 0) 65%);
+}
+
+.radial-glow-green {
+  background: radial-gradient(circle at 50% -20%, rgba(55, 214, 122, 0.15) 0%, rgba(5, 7, 10, 0) 65%);
+}
+
+/* Navigation items hover indicator slider */
+.nav-tab-active {
+  color: #FF3B45;
+  text-shadow: 0 0 8px rgba(255, 59, 69, 0.5);
+}
+
+/* Progress ratios visual bars */
+.predict-progress-red {
+  background: linear-gradient(90deg, #B51220 0%, #FF3B45 100%);
+}
+
+.predict-progress-blue {
+  background: linear-gradient(90deg, #1E3F66 0%, #3B82F6 100%);
+}
