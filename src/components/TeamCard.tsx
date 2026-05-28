@@ -8,6 +8,7 @@ interface TeamCardProps {
   isSelected: boolean;
   onVote: (teamId: string) => void;
   hasVotedAny: boolean;
+  dynamicSupportRate?: number;
 }
 
 const REGION_LABELS: Record<string, string> = {
@@ -29,11 +30,13 @@ export const TeamCard: React.FC<TeamCardProps> = ({
   isSelected,
   onVote,
   hasVotedAny,
+  dynamicSupportRate,
 }) => {
   const logoUrl = TEAM_LOGO_URLS[team.id];
   const regionLabel = REGION_LABELS[team.region] ?? team.region;
   const regionColorClass = REGION_COLORS[team.region] ?? 'text-white border-white/20 bg-white/5';
   const canVote = !hasVotedAny;
+  const displaySupportRate = dynamicSupportRate ?? team.supportRate;
 
   return (
     <div
@@ -107,14 +110,14 @@ export const TeamCard: React.FC<TeamCardProps> = ({
             className="text-[11px] font-extrabold"
             style={{ color: isSelected ? '#FF3B45' : '#9CA3AF' }}
           >
-            {team.supportRate}%
+            {displaySupportRate}%
           </span>
         </div>
         <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-700"
             style={{
-              width: `${Math.min(team.supportRate * 3, 100)}%`,
+              width: `${Math.min(displaySupportRate * 3, 100)}%`,
               background: isSelected
                 ? 'linear-gradient(90deg,#B51220,#FF3B45)'
                 : `linear-gradient(90deg, ${team.brandColor}55, ${team.brandColor})`,

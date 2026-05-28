@@ -10,6 +10,8 @@ import { ProfilePage } from './pages/ProfilePage';
 import { SharePage } from './pages/SharePage';
 import { 
   getChampionVote, 
+  getSupportRates,
+  recordChampionVoteToPool,
   saveChampionVote, 
   getMatchPredictions, 
   saveMatchPrediction, 
@@ -26,6 +28,7 @@ import confetti from 'canvas-confetti';
 function App() {
   const [activeTab, setActiveTab] = useState<TabType | 'result' | 'share'>('home');
   const [championTeamId, setChampionTeamId] = useState<string | null>(getChampionVote);
+  const [supportRates, setSupportRates] = useState<Record<string, number>>(getSupportRates);
   const [predictions, setPredictions] = useState<Record<string, Prediction>>(getMatchPredictions);
   const [profile, setProfile] = useState<UserProfile | null>(getUserProfile);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
@@ -36,7 +39,6 @@ function App() {
     type: 'success' | 'info';
     show: boolean;
   }>({ message: '', type: 'info', show: false });
-
 
   const showToast = (message: string, type: 'success' | 'info' = 'info') => {
     setToast({ message, type, show: true });
@@ -57,7 +59,9 @@ function App() {
     if (championTeamId) return; // Prevent double vote
     
     saveChampionVote(teamId);
+    recordChampionVoteToPool(teamId);
     setChampionTeamId(teamId);
+    setSupportRates(getSupportRates());
     
     // Confetti celebration
     confetti({
@@ -155,6 +159,7 @@ function App() {
         return (
           <HomePage 
             championTeamId={championTeamId}
+            supportRates={supportRates}
             onVoteChampion={handleVoteChampion}
           />
         );

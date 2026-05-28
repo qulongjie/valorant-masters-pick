@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# VALORANT Masters 伦敦大师赛 · 全民PICK榜
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+VALORANT Masters London 2026 社区预测互动 Web App —— 冠军投票、赛果预测、积分排行、分享海报。
 
-Currently, two official plugins are available:
+## 技术栈
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **TypeScript 6**
+- **Vite 8** 构建工具
+- **Tailwind CSS 3** 样式方案
+- **Lucide React** 图标库
+- **canvas-confetti** 庆祝动效
+- **localStorage** 本地数据持久化
 
-## React Compiler
+## 项目结构
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── App.tsx                  # 主路由 + 全局状态管理
+├── main.tsx                 # 入口文件
+├── pages/                   # 页面组件
+│   ├── HomePage.tsx         # 首页：冠军投票 + 队伍卡片
+│   ├── PredictPage.tsx      # 赛程预测页
+│   ├── ResultPage.tsx       # 预测结果展示页
+│   ├── RankingPage.tsx      # 排行榜页
+│   ├── ProfilePage.tsx      # 个人中心页
+│   └── SharePage.tsx        # 分享海报页
+├── components/              # 可复用组件
+│   ├── TeamCard.tsx         # 队伍投票卡片
+│   ├── MatchPredictionCard.tsx  # 比赛预测卡片
+│   ├── RankingTable.tsx     # 排行榜表格（含实时模拟）
+│   ├── SharePoster.tsx      # 分享海报生成器
+│   ├── BottomNav.tsx        # 底部导航栏
+│   ├── Layout.tsx           # 页面布局容器
+│   ├── TeamLogos.tsx        # 队伍 Logo URL 映射
+│   ├── StatCard.tsx         # 统计数据卡片
+│   └── Disclaimer.tsx       # 免责声明
+├── data/                    # 静态数据
+│   ├── teams.ts             # 12 支参赛队伍信息
+│   └── matches.ts           # 全赛程数据（瑞士轮 + 季后赛）
+├── lib/                     # 工具库
+│   ├── storage.ts           # localStorage 数据管理
+│   └── supabaseClient.ts    # Supabase 后端预留（Mock）
+└── assets/                  # 静态资源
+    └── hero.png             # 首页英雄图
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 功能特性
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **冠军投票** — 12 支参赛队伍卡片，每人限投一次，投票后实时更新支持率
+- **比赛预测** — 选择胜方 + 预测比分（BO3: 2:0/2:1, BO5: 3:0/3:1/3:2）
+- **积分系统** — 预测成功 +3 积分，积分历史可查
+- **排行榜** — 按赛区筛选，模拟实时数据变化
+- **分享海报** — 生成预测结果分享图
+- **赛程覆盖** — 瑞士轮 3 轮 + 季后赛双败淘汰 + 总决赛
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 快速开始
+
+```bash
+# 安装依赖
+npm install
+
+# 开发服务器
+npm run dev
+
+# 生产构建
+npm run build
+
+# 预览构建产物
+npm run preview
+
+# 代码检查
+npm run lint
 ```
+
+## 赛制说明
+
+| 阶段 | 时间 | 规则 |
+|------|------|------|
+| 瑞士轮 | 6月6日 — 6月11日 | 8 支非种子队，BO3，前 4 名晋级 |
+| 季后赛 | 6月13日 — 6月21日 | 4 种子 + 4 晋级，双败淘汰，总决赛 BO5 |
+
+## 参赛队伍
+
+**种子队（直通季后赛）：** EDG · PRX · G2 · TH
+
+**非种子队（瑞士轮）：** DRG · VIT · XLG · NRG · GE · FUT · FS · LEV

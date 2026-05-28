@@ -102,3 +102,38 @@ export const addPointHistory = (description: string, points: number): void => {
   profile.history = [newLog, ...profile.history];
   saveUserProfile(profile);
 };
+
+// ═══════════════════════════════════════════════════════════
+// Champion Vote Support Rates
+// 模拟社区投票池：预埋基础票数 + 用户投票实时计入
+// ═══════════════════════════════════════════════════════════
+
+const VOTE_POOL_KEY = "valorant_london_vote_pool";
+
+// 预埋基础票数，模拟已有社区投票数据
+const SEED_VOTES: Record<string, number> = {
+  EDG: 186, PRX: 142, G2: 128, TH: 95,
+  DRG: 73, VIT: 58, XLG: 89, NRG: 64,
+  GE: 41, FUT: 37, FS: 52, LEV: 45,
+};
+
+export const getSupportRates = (): Record<string, number> => {
+  const raw = localStorage.getItem(VOTE_POOL_KEY);
+  const pool: Record<string, number> = raw ? JSON.parse(raw) : { ...SEED_VOTES };
+
+  const total = Object.values(pool).reduce((s, v) => s + v, 0);
+  if (total === 0) return {};
+
+  const rates: Record<string, number> = {};
+  for (const [id, count] of Object.entries(pool)) {
+    rates[id] = Number(((count / total) * 100).toFixed(1));
+  }
+  return rates;
+};
+
+export const recordChampionVoteToPool = (teamId: string): void => {
+  const raw = localStorage.getItem(VOTE_POOL_KEY);
+  const pool: Record<string, number> = raw ? JSON.parse(raw) : { ...SEED_VOTES };
+  pool[teamId] = (pool[teamId] || 0) + 1;
+  localStorage.setItem(VOTE_POOL_KEY, JSON.stringify(pool));
+};

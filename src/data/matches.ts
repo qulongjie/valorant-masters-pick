@@ -56,5 +56,196 @@ export const MATCHES: Match[] = [
     teamAId: "LEV",
     teamBId: "GE",
     status: "upcoming"
+  },
+
+  // ── 瑞士轮 第二轮 ──────────────────────────────────────
+  {
+    id: "m_8_2",
+    date: "6月8日",
+    time: "23:00",
+    stage: "瑞士轮 第二轮 (胜者组)",
+    format: "BO3",
+    teamAId: "TBD_W1",
+    teamBId: "TBD_W2",
+    status: "upcoming"
+  },
+  {
+    id: "m_9_1",
+    date: "6月9日",
+    time: "02:00",
+    stage: "瑞士轮 第二轮 (胜者组)",
+    format: "BO3",
+    teamAId: "TBD_W3",
+    teamBId: "TBD_W4",
+    status: "upcoming"
+  },
+  {
+    id: "m_9_2",
+    date: "6月9日",
+    time: "23:00",
+    stage: "瑞士轮 第二轮 (败者组)",
+    format: "BO3",
+    teamAId: "TBD_L1",
+    teamBId: "TBD_L2",
+    status: "upcoming"
+  },
+  {
+    id: "m_9_3",
+    date: "6月10日",
+    time: "02:00",
+    stage: "瑞士轮 第二轮 (败者组)",
+    format: "BO3",
+    teamAId: "TBD_L3",
+    teamBId: "TBD_L4",
+    status: "upcoming"
+  },
+
+  // ── 瑞士轮 第三轮 ──────────────────────────────────────
+  {
+    id: "m_10_1",
+    date: "6月10日",
+    time: "23:00",
+    stage: "瑞士轮 第三轮 (晋级赛)",
+    format: "BO3",
+    teamAId: "TBD_2W1",
+    teamBId: "TBD_2W2",
+    status: "upcoming"
+  },
+  {
+    id: "m_10_2",
+    date: "6月11日",
+    time: "02:00",
+    stage: "瑞士轮 第三轮 (淘汰赛)",
+    format: "BO3",
+    teamAId: "TBD_2L1",
+    teamBId: "TBD_2L2",
+    status: "upcoming"
+  },
+
+  // ── 季后赛 ─────────────────────────────────────────────
+  // 上半区
+  {
+    id: "po_ub_1",
+    date: "6月13日",
+    time: "22:00",
+    stage: "季后赛 上半区 第一轮",
+    format: "BO3",
+    teamAId: "EDG",
+    teamBId: "TBD_SW1",
+    status: "upcoming"
+  },
+  {
+    id: "po_ub_2",
+    date: "6月14日",
+    time: "01:00",
+    stage: "季后赛 上半区 第一轮",
+    format: "BO3",
+    teamAId: "G2",
+    teamBId: "TBD_SW3",
+    status: "upcoming"
+  },
+  {
+    id: "po_ub_3",
+    date: "6月14日",
+    time: "22:00",
+    stage: "季后赛 上半区 第一轮",
+    format: "BO3",
+    teamAId: "PRX",
+    teamBId: "TBD_SW2",
+    status: "upcoming"
+  },
+  {
+    id: "po_ub_4",
+    date: "6月15日",
+    time: "01:00",
+    stage: "季后赛 上半区 第一轮",
+    format: "BO3",
+    teamAId: "TH",
+    teamBId: "TBD_SW4",
+    status: "upcoming"
+  },
+  {
+    id: "po_ub_sf1",
+    date: "6月15日",
+    time: "22:00",
+    stage: "季后赛 上半区 半决赛",
+    format: "BO3",
+    teamAId: "TBD_PO1",
+    teamBId: "TBD_PO2",
+    status: "upcoming"
+  },
+  {
+    id: "po_ub_sf2",
+    date: "6月16日",
+    time: "01:00",
+    stage: "季后赛 上半区 半决赛",
+    format: "BO3",
+    teamAId: "TBD_PO3",
+    teamBId: "TBD_PO4",
+    status: "upcoming"
+  },
+  {
+    id: "po_ub_final",
+    date: "6月17日",
+    time: "22:00",
+    stage: "季后赛 上半区 决赛",
+    format: "BO3",
+    teamAId: "TBD_UBS1",
+    teamBId: "TBD_UBS2",
+    status: "upcoming"
+  },
+
+  // 下半区
+  {
+    id: "po_lb_1",
+    date: "6月16日",
+    time: "22:00",
+    stage: "季后赛 下半区 第一轮",
+    format: "BO3",
+    teamAId: "TBD_LPO1",
+    teamBId: "TBD_LPO2",
+    status: "upcoming"
+  },
+  {
+    id: "po_lb_2",
+    date: "6月17日",
+    time: "01:00",
+    stage: "季后赛 下半区 第一轮",
+    format: "BO3",
+    teamAId: "TBD_LPO3",
+    teamBId: "TBD_LPO4",
+    status: "upcoming"
+  },
+  {
+    id: "po_lb_sf1",
+    date: "6月18日",
+    time: "22:00",
+    stage: "季后赛 下半区 半决赛",
+    format: "BO3",
+    teamAId: "TBD_LBW1",
+    teamBId: "TBD_LBW2",
+    status: "upcoming"
+  },
+  {
+    id: "po_lb_final",
+    date: "6月19日",
+    time: "22:00",
+    stage: "季后赛 下半区 决赛",
+    format: "BO3",
+    teamAId: "TBD_LBSF",
+    teamBId: "TBD_LBF",
+    status: "upcoming"
+  },
+
+  // 总决赛
+  {
+    id: "po_grand_final",
+    date: "6月21日",
+    time: "22:00",
+    stage: "总决赛",
+    format: "BO5",
+    teamAId: "TBD_UBF",
+    teamBId: "TBD_LBF",
+    status: "upcoming"
   }
 ];

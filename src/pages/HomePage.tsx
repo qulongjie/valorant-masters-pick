@@ -6,11 +6,13 @@ import { Calendar, MapPin, Trophy, Megaphone } from 'lucide-react';
 
 interface HomePageProps {
   championTeamId: string | null;
+  supportRates: Record<string, number>;
   onVoteChampion: (teamId: string) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   championTeamId,
+  supportRates,
   onVoteChampion,
 }) => {
   return (
@@ -128,11 +130,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             isSelected={championTeamId === team.id}
             onVote={onVoteChampion}
             hasVotedAny={championTeamId !== null}
+            dynamicSupportRate={supportRates[team.id]}
           />
         ))}
       </div>
 
-      {/* ══ 5. BOTTOM INFO ════════════════════════════════════ */}
+      {/* ══ 5. BOTTOM INFO ═════════════════════════════════════ */}
       <div className="flex items-center gap-2 mt-5 px-3 py-2 bg-[#0A0D12] border border-white/5 rounded-xl">
         <Megaphone className="w-3.5 h-3.5 text-[#FF3B45] flex-shrink-0" />
         <p className="text-[9px] text-white/50 font-semibold leading-snug">
