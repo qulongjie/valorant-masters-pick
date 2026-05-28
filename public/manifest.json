@@ -1,0 +1,17 @@
+{
+  "name": "VALORANT Masters 伦敦大师赛 · 全民PICK榜",
+  "short_name": "PICK榜",
+  "description": "VALORANT Masters London 2026 社区预测互动",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070A",
+  "theme_color": "#05070A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -74,20 +74,20 @@ export const MatchPredictionCard: React.FC<MatchPredictionCardProps> = ({
           </span>
         </div>
         <span className="text-[10px] bg-white/5 text-grey-secondary px-2 py-0.5 rounded-full font-bold">
-          {match.time}
+          {match.date} {match.time}
         </span>
       </div>
 
-      {/* Versus Grid Panel */}
+      {/* Versus Grid Panel — Logo 48x48 */}
       <div className="grid grid-cols-7 items-center justify-center my-4 select-none">
         {/* Team A */}
         <div className="col-span-3 flex flex-col items-center">
-          <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${teamA.color} p-[1.5px] flex items-center justify-center overflow-hidden`}>
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${teamA.color} p-[1.5px] flex items-center justify-center overflow-hidden`}>
             <div className="w-full h-full rounded-full bg-dark-card flex items-center justify-center overflow-hidden">
               {logoA ? (
-                <img src={logoA} alt={teamA.name} className="w-9 h-9 object-contain" />
+                <img src={logoA} alt={teamA.name} className="w-10 h-10 object-contain" loading="lazy" />
               ) : (
-                <span className="text-[11px] font-black text-white">{teamA.logoText}</span>
+                <span className="text-[12px] font-black text-white">{teamA.logoText}</span>
               )}
             </div>
           </div>
@@ -99,13 +99,13 @@ export const MatchPredictionCard: React.FC<MatchPredictionCardProps> = ({
           </span>
         </div>
 
-        {/* VS Divider */}
-        <div className="col-span-1 flex flex-col items-center justify-center relative">
-          <span className="text-sm font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-valorant to-[#FF8086]">
+        {/* VS — 旋转动画 */}
+        <div className="col-span-1 flex flex-col items-center justify-center relative perspective-[200px]">
+          <span className="text-sm font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-valorant to-[#FF8086] animate-vs-spin inline-block">
             VS
           </span>
           {existingPrediction && (
-            <span className="absolute -bottom-3 text-[8px] text-status-success bg-status-success/10 border border-status-success/20 px-1 rounded font-bold uppercase whitespace-nowrap">
+            <span className="absolute -bottom-3 text-[8px] text-status-success bg-status-success/10 border border-status-success/20 px-1.5 rounded font-bold uppercase whitespace-nowrap">
               已预测
             </span>
           )}
@@ -113,12 +113,12 @@ export const MatchPredictionCard: React.FC<MatchPredictionCardProps> = ({
 
         {/* Team B */}
         <div className="col-span-3 flex flex-col items-center">
-          <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${teamB.color} p-[1.5px] flex items-center justify-center overflow-hidden`}>
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${teamB.color} p-[1.5px] flex items-center justify-center overflow-hidden`}>
             <div className="w-full h-full rounded-full bg-dark-card flex items-center justify-center overflow-hidden">
               {logoB ? (
-                <img src={logoB} alt={teamB.name} className="w-9 h-9 object-contain" />
+                <img src={logoB} alt={teamB.name} className="w-10 h-10 object-contain" loading="lazy" />
               ) : (
-                <span className="text-[11px] font-black text-white">{teamB.logoText}</span>
+                <span className="text-[12px] font-black text-white">{teamB.logoText}</span>
               )}
             </div>
           </div>
@@ -131,9 +131,9 @@ export const MatchPredictionCard: React.FC<MatchPredictionCardProps> = ({
         </div>
       </div>
 
-      {/* Interactive Selection Flow */}
+      {/* 已预测 — 磨砂覆盖层 */}
       {existingPrediction ? (
-        <div className="mt-2 bg-white/[0.02] border border-white/5 rounded-xl p-3 flex flex-col items-center select-none animate-fade-in">
+        <div className="mt-2 bg-white/[0.03] backdrop-blur-sm border border-white/5 rounded-xl p-3 flex flex-col items-center select-none animate-fade-in">
           <div className="text-[10px] text-grey-secondary font-semibold uppercase tracking-wider">
             你的预测结果
           </div>
@@ -150,59 +150,59 @@ export const MatchPredictionCard: React.FC<MatchPredictionCardProps> = ({
           </div>
           <button
             onClick={() => onViewResult(match.id)}
-            className="w-full mt-3 py-1.5 rounded-lg text-[10px] font-black text-white border border-white/10 hover:border-white/20 bg-transparent transition-all duration-300 flex items-center justify-center gap-1 cursor-pointer"
+            className="w-full mt-3 py-1.5 rounded-lg text-[10px] font-black text-white border border-white/10 hover:border-white/20 bg-transparent transition-all duration-300 flex items-center justify-center gap-1 cursor-pointer active:scale-95"
           >
             查看大众支持率与比分 &gt;
           </button>
         </div>
       ) : (
         <div className="mt-2 flex flex-col gap-3 select-none">
-          {/* Winner Selector */}
+          {/* Winner Selector — 滑动高亮 */}
           <div>
             <div className="text-[9px] text-grey-secondary font-bold uppercase tracking-widest mb-1.5 text-center">
               1. 谁会赢？
             </div>
             <div className="grid grid-cols-2 gap-2.5">
-              <button
-                onClick={() => handleSelectWinner(teamA.id)}
-                className={`py-2 rounded-lg text-xs font-black uppercase transition-all duration-300 slanted-cut-br border ${
-                  selectedWinnerId === teamA.id
-                    ? 'bg-gradient-to-r from-valorant/20 to-valorant border-valorant text-white shadow-red-glow'
-                    : 'bg-transparent border-white/10 hover:border-white/20 text-grey-secondary hover:text-white'
-                }`}
-              >
-                {teamA.name} 胜
-              </button>
-              <button
-                onClick={() => handleSelectWinner(teamB.id)}
-                className={`py-2 rounded-lg text-xs font-black uppercase transition-all duration-300 slanted-cut-br border ${
-                  selectedWinnerId === teamB.id
-                    ? 'bg-gradient-to-l from-valorant/20 to-valorant border-valorant text-white shadow-red-glow'
-                    : 'bg-transparent border-white/10 hover:border-white/20 text-grey-secondary hover:text-white'
-                }`}
-              >
-                {teamB.name} 胜
-              </button>
+              {[{ team: teamA }, { team: teamB }].map(({ team: t }) => {
+                const isSel = selectedWinnerId === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => handleSelectWinner(t.id)}
+                    className={`relative py-2 rounded-lg text-xs font-black uppercase transition-all duration-300 border overflow-hidden ${
+                      isSel
+                        ? 'bg-gradient-to-r from-valorant/20 to-valorant border-valorant text-white shadow-red-glow scale-[1.02]'
+                        : 'bg-transparent border-white/10 hover:border-white/20 text-grey-secondary hover:text-white'
+                    }`}
+                  >
+                    {isSel && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-valorant/10 to-valorant/30 animate-fade-in" />
+                    )}
+                    <span className="relative z-10">{t.name} 胜</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Score Selector */}
+          {/* Score Selector — 胶囊样式 + 弹性动画 */}
           <div className={`transition-all duration-300 ${selectedWinnerId ? 'opacity-100 max-h-24' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none'}`}>
             <div className="text-[9px] text-grey-secondary font-bold uppercase tracking-widest mb-1.5 text-center">
               2. 预测比分是多少？
             </div>
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center gap-2">
               {scoreOptions.map((score) => {
                 const isSelected = selectedScore === score;
                 return (
                   <button
                     key={score}
                     onClick={() => handleSelectScore(score)}
-                    className={`px-5 py-1.5 rounded-lg text-xs font-black transition-all duration-300 border ${
+                    className={`px-5 py-1.5 rounded-full text-xs font-black transition-all duration-300 border ${
                       isSelected
-                        ? 'bg-valorant border-valorant text-white shadow-red-glow'
+                        ? 'bg-valorant border-valorant text-white shadow-red-glow scale-110'
                         : 'bg-transparent border-white/10 hover:border-white/20 text-grey-secondary hover:text-white'
                     }`}
+                    style={isSelected ? { transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' } : {}}
                   >
                     {score}
                   </button>
@@ -211,11 +211,11 @@ export const MatchPredictionCard: React.FC<MatchPredictionCardProps> = ({
             </div>
           </div>
 
-          {/* Submit Prediction */}
+          {/* Submit — 渐变边框动画 + shimmer */}
           <button
             disabled={!isFormComplete}
             onClick={handleSubmit}
-            className={`w-full mt-2 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all duration-300 slanted-cut-br ${
+            className={`shimmer-btn w-full mt-2 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all duration-300 slanted-cut-br ${
               isFormComplete
                 ? 'bg-gradient-to-r from-valorant-dark to-valorant text-white hover:brightness-110 shadow-red-glow cursor-pointer active:scale-95'
                 : 'bg-white/5 border border-white/5 text-grey-secondary/35 cursor-not-allowed'

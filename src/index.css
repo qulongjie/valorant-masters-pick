@@ -2,112 +2,259 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════
+   CSS Custom Properties — 统一颜色管理
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --color-valorant: #FF3B45;
+  --color-valorant-dark: #B51220;
+  --color-bg-dark: #05070A;
+  --color-bg-medium: #080B10;
+  --color-bg-light: #0D1117;
+  --color-card: #0F1218;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-focus: rgba(255, 59, 69, 0.4);
+  --color-grey-secondary: #A0A6B2;
+  --color-success: #37D67A;
+  --color-info: #3B82F6;
+  --color-gold: #FFD700;
+  --color-silver: #C0C0C0;
+  --color-bronze: #CD7F32;
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
   body {
-    background-color: #05070A;
+    background-color: var(--color-bg-dark);
     color: #FFFFFF;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
   }
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(8, 11, 16, 0.5);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 59, 69, 0.3);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 59, 69, 0.6);
-}
+/* ═══════════════════════════════════════════════════════════
+   Custom Scrollbars
+   ═══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: rgba(8, 11, 16, 0.5); }
+::-webkit-scrollbar-thumb { background: rgba(255, 59, 69, 0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 59, 69, 0.6); }
 
-/* Glassmorphism Styles */
+/* ═══════════════════════════════════════════════════════════
+   Glassmorphism
+   ═══════════════════════════════════════════════════════════ */
 .glass-panel {
   background: rgba(15, 18, 24, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
-
 .glass-panel-light {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.glass-panel-glow {
-  background: rgba(15, 18, 24, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 59, 69, 0.25);
-  box-shadow: 0 0 15px rgba(255, 59, 69, 0.15);
-}
-
-/* Centered H5 Layout Container */
-.h5-container {
-  width: 100%;
-  max-width: 430px;
-  min-height: 100dvh;
-  margin: 0 auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: #05070A;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.1);
-  overflow-x: hidden;
-}
-
-/* London City Skyline Backdrop Overlay */
-.london-skyline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 220px;
-  opacity: 0.08;
-  pointer-events: none;
-  background-repeat: repeat-x;
-  background-position: bottom;
-  background-size: 400px 220px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220' fill='%23FFFFFF'><path d='M0,220 L400,220 L400,200 L380,200 L380,180 L360,180 L360,150 L340,150 L340,220 M120,220 L120,130 L130,120 L140,120 L150,130 L150,220 M60,220 L60,80 L70,80 L70,50 L75,50 L75,40 L70,40 L70,30 L65,30 L65,10 L60,30 L55,30 L55,40 L50,40 L50,50 L55,50 L55,80 L60,80 M240,220 C240,170 280,170 280,220 M260,220 C260,190 280,190 280,220 M200,220 L200,120 L220,120 L220,220 M300,220 L300,100 L310,95 L320,100 L320,220 M20,220 L20,140 L35,120 L50,140 L50,220 Z' opacity='0.4'/><circle cx='260' cy='220' r='45' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-dasharray='3,3' opacity='0.4'/></svg>");
-}
-
-/* Valorant angled cuts */
+/* ═══════════════════════════════════════════════════════════
+   Slanted Cut Utility
+   ═══════════════════════════════════════════════════════════ */
 .slanted-cut-br {
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
 }
 
-.slanted-cut-tl {
-  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+/* ═══════════════════════════════════════════════════════════
+   Page Transition
+   ═══════════════════════════════════════════════════════════ */
+.page-enter {
+  animation: pageSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Custom background glows */
-.radial-glow {
-  background: radial-gradient(circle at 50% -20%, rgba(255, 59, 69, 0.15) 0%, rgba(5, 7, 10, 0) 65%);
+/* ═══════════════════════════════════════════════════════════
+   Hero Banner Particles (纯CSS)
+   ═══════════════════════════════════════════════════════════ */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-particles span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--color-valorant);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 6s ease-in-out infinite;
+}
+.hero-particles span:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 5s; }
+.hero-particles span:nth-child(2) { left: 25%; animation-delay: 1s; animation-duration: 7s; }
+.hero-particles span:nth-child(3) { left: 40%; animation-delay: 2s; animation-duration: 4s; }
+.hero-particles span:nth-child(4) { left: 55%; animation-delay: 0.5s; animation-duration: 6s; }
+.hero-particles span:nth-child(5) { left: 70%; animation-delay: 1.5s; animation-duration: 5.5s; }
+.hero-particles span:nth-child(6) { left: 85%; animation-delay: 3s; animation-duration: 4.5s; }
+.hero-particles span:nth-child(7) { left: 15%; animation-delay: 2.5s; animation-duration: 6.5s; }
+.hero-particles span:nth-child(8) { left: 50%; animation-delay: 0.8s; animation-duration: 5.2s; }
+@keyframes particleFloat {
+  0%   { bottom: -5%; opacity: 0; transform: translateX(0) scale(1); }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { bottom: 105%; opacity: 0; transform: translateX(30px) scale(0.5); }
 }
 
-.radial-glow-green {
-  background: radial-gradient(circle at 50% -20%, rgba(55, 214, 122, 0.15) 0%, rgba(5, 7, 10, 0) 65%);
+/* ═══════════════════════════════════════════════════════════
+   Breathing & Pulse Animations
+   ═══════════════════════════════════════════════════════════ */
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.03); }
+}
+@keyframes breatheGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(255, 59, 69, 0.3); }
+  50%      { box-shadow: 0 0 28px rgba(255, 59, 69, 0.6); }
+}
+@keyframes breatheTag {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 59, 69, 0.25); filter: brightness(1); }
+  50%      { box-shadow: 0 0 16px rgba(255, 59, 69, 0.5); filter: brightness(1.15); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+@keyframes borderRotate {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounceIn {
+  0%   { transform: scale(0); opacity: 0; }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseRed {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+@keyframes scanLine {
+  0%   { left: -30%; }
+  100% { left: 130%; }
+}
+@keyframes vsSpin {
+  0%   { transform: rotateY(0deg) scale(1); }
+  50%  { transform: rotateY(180deg) scale(1.1); }
+  100% { transform: rotateY(360deg) scale(1); }
+}
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@keyframes goldShimmer {
+  0%   { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
 }
 
-/* Navigation items hover indicator slider */
-.nav-tab-active {
-  color: #FF3B45;
-  text-shadow: 0 0 8px rgba(255, 59, 69, 0.5);
+/* Utility animation classes */
+.animate-breathe      { animation: breathe 2.5s ease-in-out infinite; }
+.animate-breathe-glow { animation: breatheGlow 2.5s ease-in-out infinite; }
+.animate-breathe-tag  { animation: breatheTag 2s ease-in-out infinite; }
+.animate-ripple       { animation: ripple 0.6s ease-out; }
+.animate-border-rotate { animation: borderRotate 3s linear infinite; }
+.animate-slide-left   { animation: slideInLeft 0.4s ease-out forwards; }
+.animate-slide-up     { animation: slideUp 0.4s ease-out forwards; }
+.animate-bounce-in    { animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-count-up     { animation: countUp 0.6s ease-out forwards; }
+.animate-pulse-red    { animation: pulseRed 2s ease-in-out infinite; }
+.animate-scan         { animation: scanLine 2.5s ease-in-out infinite; }
+.animate-vs-spin      { animation: vsSpin 4s ease-in-out infinite; }
+.animate-bounce-arrow { animation: bounceArrow 1s ease-in-out infinite; }
+
+/* Shimmer effect for buttons */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -30%;
+  width: 30%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: scanLine 2.5s ease-in-out infinite;
 }
 
-/* Progress ratios visual bars */
-.predict-progress-red {
-  background: linear-gradient(90deg, #B51220 0%, #FF3B45 100%);
+/* Rotating border for logos */
+.logo-ring-wrapper {
+  position: relative;
+}
+.logo-ring-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #FF3B45, #FF8086, transparent, #FF3B45);
+  animation: borderRotate 3s linear infinite;
+  z-index: 0;
 }
 
-.predict-progress-blue {
-  background: linear-gradient(90deg, #1E3F66 0%, #3B82F6 100%);
+/* Gold gradient for seed badge */
+.seed-badge-gold {
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
+  background-size: 200% 100%;
+  animation: goldShimmer 2s ease-in-out infinite;
+  color: #05070A;
+  border: none;
+}
+
+/* Top-3 row borders */
+.row-gold   { border-left: 3px solid #FFD700; }
+.row-silver { border-left: 3px solid #C0C0C0; }
+.row-bronze { border-left: 3px solid #CD7F32; }
+
+/* Bottom nav top edge */
+.nav-top-edge {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--color-valorant), transparent) 1;
+}
+
+/* Scrollbar-none utility */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Ripple container */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+.ripple-container .ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 59, 69, 0.35);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
 }

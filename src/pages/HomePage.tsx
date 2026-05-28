@@ -16,21 +16,28 @@ export const HomePage: React.FC<HomePageProps> = ({
   onVoteChampion,
 }) => {
   return (
-    <div className="w-full flex flex-col select-none animate-fade-in">
+    <div className="w-full flex flex-col select-none page-enter">
 
       {/* ══ 1. HERO BANNER ══════════════════════════════════════ */}
       <div className="relative w-full rounded-2xl overflow-hidden mb-4" style={{ aspectRatio: '16/7' }}>
-
         {/* Background photo */}
         <img
           src="/hero_banner.png"
           alt="Valorant Masters London 2026"
           className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
         />
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-[#05070A]/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#FF3B45]/15 via-transparent to-transparent" />
+        {/* Gradient overlays — 强化红色光晕 */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-[#05070A]/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FF3B45]/20 via-transparent to-[#FF3B45]/5" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FF3B45]/8 via-transparent to-transparent" />
+
+        {/* CSS 粒子飘动 */}
+        <div className="hero-particles">
+          <span /><span /><span /><span />
+          <span /><span /><span /><span />
+        </div>
 
         {/* Badge row */}
         <div className="absolute top-3 left-3 flex items-center gap-2">
@@ -53,7 +60,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         {/* Bottom text overlay */}
         <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
-          <div className="flex items-center gap-1.5 bg-[#FF3B45]/20 border border-[#FF3B45]/40 rounded-full px-3 py-1 w-fit mb-1.5">
+          {/* 呼吸动画标签 */}
+          <div className="flex items-center gap-1.5 bg-[#FF3B45]/25 border border-[#FF3B45]/50 rounded-full px-3 py-1 w-fit mb-2 animate-breathe-tag">
             <Trophy className="w-3 h-3 text-[#FF3B45]" />
             <span className="text-[10px] font-black text-[#FF3B45] uppercase tracking-widest">
               伦敦大师赛 全民PICK榜
@@ -61,24 +69,27 @@ export const HomePage: React.FC<HomePageProps> = ({
             <Trophy className="w-3 h-3 text-[#FF3B45]" />
           </div>
 
-          <h1 className="text-[28px] font-black text-white italic tracking-tight leading-none drop-shadow-lg">
+          {/* 标题 32px+ + 深阴影 */}
+          <h1 className="text-[32px] font-black text-white italic tracking-tight leading-none"
+              style={{ textShadow: '0 4px 20px rgba(255,59,69,0.4), 0 2px 8px rgba(0,0,0,0.8)' }}>
             谁能问鼎伦敦？
           </h1>
 
-          <p className="text-[11px] text-white/70 font-semibold mt-1">
+          <p className="text-[11px] text-white/70 font-semibold mt-1.5">
             选择你<span className="text-[#FF3B45] font-black">支持的队伍</span>，参与民间娱乐预测
           </p>
 
-          <div className="flex flex-col gap-0.5 mt-2">
+          {/* 磨砂玻璃信息栏 */}
+          <div className="flex flex-col gap-1 mt-2.5 bg-black/40 backdrop-blur-md rounded-lg px-3 py-2 border border-white/10">
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3 h-3 text-white/60 flex-shrink-0" />
-              <span className="text-[10px] text-white/60 font-semibold">
+              <span className="text-[10px] text-white/70 font-semibold">
                 投票时间：2026.06.06 - 06.21
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3 h-3 text-white/60 flex-shrink-0" />
-              <span className="text-[10px] text-white/60 font-semibold">
+              <span className="text-[10px] text-white/70 font-semibold">
                 比赛地点：英国 · 伦敦 Copper Box Arena
               </span>
             </div>
@@ -88,7 +99,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* ══ 2. STAGE INFO ══════════════════════════════════════ */}
       <div className="grid grid-cols-2 gap-2 mb-4">
-        <div className="bg-[#0A0D12] border border-[#FF3B45]/20 rounded-xl p-3 flex flex-col gap-1">
+        <div className="bg-[#0A0D12] border border-[#FF3B45]/25 rounded-xl p-3 flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-[#FF3B45] animate-pulse" />
             <span className="text-[9px] font-black text-[#FF3B45] uppercase tracking-widest">瑞士轮</span>
@@ -136,7 +147,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       </div>
 
       {/* ══ 5. BOTTOM INFO ═════════════════════════════════════ */}
-      <div className="flex items-center gap-2 mt-5 px-3 py-2 bg-[#0A0D12] border border-white/5 rounded-xl">
+      <div className="flex items-center gap-2 mt-5 px-3 py-2.5 bg-[#0A0D12]/80 backdrop-blur-sm border border-white/5 rounded-xl">
         <Megaphone className="w-3.5 h-3.5 text-[#FF3B45] flex-shrink-0" />
         <p className="text-[9px] text-white/50 font-semibold leading-snug">
           每人每日可参与娱乐预测，数据实时模拟更新。本活动不涉及任何金钱投注，纯属民间电竞娱乐。

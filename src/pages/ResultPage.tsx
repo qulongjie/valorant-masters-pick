@@ -3,7 +3,7 @@ import type { Match } from '../data/matches';
 import type { Team } from '../data/teams';
 import type { Prediction } from '../lib/storage';
 import { Disclaimer } from '../components/Disclaimer';
-import { CheckCircle2, Share2, Calendar } from 'lucide-react';
+import { CheckCircle2, Share2, Calendar, ArrowLeft, Activity } from 'lucide-react';
 
 interface ResultPageProps {
   match: Match;
@@ -25,12 +25,9 @@ export const ResultPage: React.FC<ResultPageProps> = ({
   const isASelected = prediction.winnerTeamId === teamA.id;
   const winnerName = isASelected ? teamA.name : teamB.name;
 
-  // Mock public opinion aggregates for EDG vs G2 and other matches
-  // If the predicted winner is A, let's skew the percentages slightly so it feels extremely realistic based on who was chosen!
   const aPercentage = isASelected ? 61 : 39;
   const bPercentage = 100 - aPercentage;
 
-  // Mock hottest scores distribution list based on selected winner
   const scoreStats = isASelected
     ? [
         { label: `${teamA.name} 2:1`, pct: 46.8, highlight: prediction.score === "2:1" },
@@ -46,14 +43,14 @@ export const ResultPage: React.FC<ResultPageProps> = ({
       ];
 
   return (
-    <div className="w-full flex flex-col select-none animate-fade-in text-center">
+    <div className="w-full flex flex-col select-none page-enter text-center">
       
-      {/* 1. Successful Indicator Banner */}
+      {/* 1. 成功勾号 — 缩放弹入 */}
       <div className="flex flex-col items-center mt-3 mb-6">
-        <div className="w-14 h-14 bg-status-success/15 border border-status-success/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(55,214,122,0.15)] mb-3 animate-subtle-pulse">
+        <div className="w-14 h-14 bg-status-success/15 border border-status-success/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(55,214,122,0.15)] mb-3 animate-bounce-in">
           <CheckCircle2 className="w-8 h-8 text-status-success" />
         </div>
-        <h1 className="text-xl font-black text-white tracking-wider uppercase italic">
+        <h1 className="text-xl font-black text-white tracking-wider uppercase italic animate-slide-up">
           预测已提交！
         </h1>
         <p className="text-[10px] text-grey-secondary font-bold tracking-wide mt-1">
@@ -62,7 +59,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
       </div>
 
       {/* 2. Your Prediction Card */}
-      <div className="glass-panel-glow rounded-xl p-4 text-left border-l-2 border-l-valorant mb-5">
+      <div className="glass-panel rounded-xl p-4 text-left border-l-2 border-l-valorant mb-5">
         <span className="text-[8px] text-grey-secondary font-bold tracking-widest uppercase mb-1 block">
           你的预测选择
         </span>
@@ -76,60 +73,55 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               比赛时间：{match.date} {match.time}
             </span>
           </div>
-          
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-1.5 leading-none">
-              <span className="text-[9.5px] text-grey-secondary font-extrabold uppercase">
-                {winnerName}
-              </span>
-              <span className="text-xl font-black text-valorant italic">
-                {prediction.score}
-              </span>
+              <span className="text-[9.5px] text-grey-secondary font-extrabold uppercase">{winnerName}</span>
+              <span className="text-xl font-black text-valorant italic">{prediction.score}</span>
             </div>
-            <span className="text-[8px] text-grey-secondary font-semibold mt-1">
-              获胜
-            </span>
+            <span className="text-[8px] text-grey-secondary font-semibold mt-1">获胜</span>
           </div>
+        </div>
+
+        {/* 脉冲指示器 */}
+        <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-white/5">
+          <div className="relative">
+            <Activity className="w-2.5 h-2.5 text-status-success" />
+            <div className="absolute inset-0 w-2.5 h-2.5 bg-status-success/40 rounded-full animate-ping" />
+          </div>
+          <span className="text-[8px] text-grey-secondary/60 font-semibold uppercase tracking-wider">实时更新中</span>
         </div>
       </div>
 
-      {/* 3. Public Opinion / Mass Predictions Bar */}
+      {/* 3. Public Opinion — 从中间向两边扩展动画 */}
       <div className="glass-panel rounded-xl p-4 border border-white/5 text-left mb-5">
         <h3 className="text-xs font-black text-white uppercase tracking-wider mb-3">
           大众预测胜率
         </h3>
-        
         <div className="flex justify-between items-center text-xs font-black mb-1.5 uppercase font-mono">
           <span className="text-valorant">{teamA.name} {aPercentage}%</span>
           <span className="text-status-info">{teamB.name} {bPercentage}%</span>
         </div>
-
-        {/* Dual Progress Bar */}
         <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden flex">
-          <div 
-            className="h-full predict-progress-red transition-all duration-1000 shadow-[0_0_8px_#FF3B45]" 
-            style={{ width: `${aPercentage}%` }}
-          />
-          <div 
-            className="h-full predict-progress-blue transition-all duration-1000 shadow-[0_0_8px_#3B82F6]" 
-            style={{ width: `${bPercentage}%` }}
-          />
+          <div className="h-full bg-gradient-to-r from-valorant-dark to-valorant shadow-[0_0_8px_#FF3B45] transition-all duration-1000" style={{ width: `${aPercentage}%` }} />
+          <div className="h-full bg-gradient-to-l from-[#2563EB] to-status-info shadow-[0_0_8px_#3B82F6] transition-all duration-1000" style={{ width: `${bPercentage}%` }} />
         </div>
-        
         <p className="text-[8px] text-grey-secondary/60 font-semibold mt-2.5 leading-normal">
           * 数据来自全国玩家的娱乐预测实时聚合统计，红色代表 {teamA.name}，蓝色代表 {teamB.name}。
         </p>
       </div>
 
-      {/* 4. Hottest Scores List */}
+      {/* 4. Hottest Scores — 延迟滑入 */}
       <div className="glass-panel rounded-xl p-4 border border-white/5 text-left mb-6">
         <h3 className="text-xs font-black text-white uppercase tracking-wider mb-3">
           最热比分预测排行
         </h3>
-
         <div className="flex flex-col gap-2.5">
           {scoreStats.map((item, idx) => (
-            <div key={idx} className="flex flex-col">
+            <div 
+              key={idx} 
+              className="flex flex-col animate-slide-left"
+              style={{ animationDelay: `${idx * 100 + 200}ms`, animationFillMode: 'backwards' }}
+            >
               <div className="flex justify-between items-center text-[10px] font-extrabold mb-1">
                 <span className={`${item.highlight ? 'text-valorant' : 'text-white'}`}>
                   {item.label} {item.highlight && <span className="text-[8px] bg-valorant/15 px-1 py-0.5 rounded font-black text-valorant uppercase ml-1">我的预测</span>}
@@ -147,11 +139,11 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         </div>
       </div>
 
-      {/* 5. Operations / Action buttons */}
+      {/* 5. Actions — shimmer + secondary outline */}
       <div className="flex flex-col gap-2.5">
         <button
           onClick={() => onGenerateShare(match.id)}
-          className="w-full py-2.5 rounded-lg text-xs font-black uppercase bg-gradient-to-r from-valorant-dark to-valorant text-white hover:brightness-110 shadow-red-glow cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-1.5 slanted-cut-br"
+          className="shimmer-btn w-full py-2.5 rounded-lg text-xs font-black uppercase bg-gradient-to-r from-valorant-dark to-valorant text-white hover:brightness-110 shadow-red-glow cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-1.5 slanted-cut-br"
         >
           <Share2 className="w-3.5 h-3.5" />
           生成分享卡片
@@ -159,13 +151,13 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         
         <button
           onClick={onBackToPredict}
-          className="w-full py-2.5 rounded-lg text-xs font-black uppercase bg-transparent text-white border border-white/10 hover:border-white/20 cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-1 leading-none"
+          className="w-full py-2.5 rounded-lg text-xs font-black uppercase bg-transparent text-grey-secondary border border-white/10 hover:border-white/20 hover:text-white cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-1"
         >
-          返回今日赛程 &gt;
+          <ArrowLeft className="w-3.5 h-3.5" />
+          返回今日赛程
         </button>
       </div>
 
-      {/* 6. Legal notices */}
       <Disclaimer />
     </div>
   );

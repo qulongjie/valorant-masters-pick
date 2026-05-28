@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import type { Team } from '../data/teams';
 import { TEAM_LOGO_URLS } from './TeamLogos';
 import { CheckCircle } from 'lucide-react';
@@ -37,6 +37,25 @@ export const TeamCard: React.FC<TeamCardProps> = ({
   const regionColorClass = REGION_COLORS[team.region] ?? 'text-white border-white/20 bg-white/5';
   const canVote = !hasVotedAny;
   const displaySupportRate = dynamicSupportRate ?? team.supportRate;
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!canVote) return;
+    // Ripple effect
+    if (btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple-effect';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+      ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+      btnRef.current.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    }
+    onVote(team.id);
+  };
 
   return (
     <div
@@ -44,8 +63,8 @@ export const TeamCard: React.FC<TeamCardProps> = ({
       className={`
         relative flex flex-col items-center rounded-xl p-2.5 pt-3 select-none transition-all duration-300
         ${isSelected
-          ? 'bg-[#0F1218] border-2 border-[#FF3B45] shadow-[0_0_20px_rgba(255,59,69,0.35)]'
-          : 'bg-[#0A0D12] border border-white/[0.07] hover:border-white/20'
+          ? 'bg-[#0F1218] border-2 border-[#FF3B45] animate-breathe-glow'
+          : 'bg-[#0A0D12] border border-white/[0.07] hover:border-white/20 hover:-translate-y-0.5 hover:shadow-card-hover'
         }
         ${canVote ? 'cursor-pointer active:scale-95' : 'cursor-default'}
         ${hasVotedAny && !isSelected ? 'opacity-60' : ''}
@@ -54,14 +73,14 @@ export const TeamCard: React.FC<TeamCardProps> = ({
       {/* Selected check badge */}
       {isSelected && (
         <div className="absolute top-1.5 right-1.5 z-20">
-          <CheckCircle className="w-4 h-4 text-[#FF3B45] fill-[#FF3B45]/20" />
+          <CheckCircle className="w-4 h-4 text-[#FF3B45] fill-[#FF3B45]/20 animate-bounce-in" />
         </div>
       )}
 
-      {/* Direct Seed Badge */}
+      {/* 金色种子标签 */}
       {team.isDirectSeed && (
         <div className="absolute top-1.5 left-1.5 z-20">
-          <span className="text-[6.5px] font-black bg-[#FF3B45]/20 border border-[#FF3B45]/40 text-[#FF3B45] px-1 py-0.5 rounded uppercase leading-none">
+          <span className="text-[6.5px] font-black seed-badge-gold px-1.5 py-0.5 rounded uppercase leading-none">
             种子
           </span>
         </div>
@@ -72,30 +91,32 @@ export const TeamCard: React.FC<TeamCardProps> = ({
         {regionLabel}
       </span>
 
-      {/* Official Team Logo */}
-      <div
-        className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-500 overflow-hidden ${isSelected ? 'scale-110' : ''}`}
-        style={{
-          background: `radial-gradient(circle, ${team.bgAccent} 0%, rgba(5,7,10,0.95) 75%)`,
-          boxShadow: isSelected ? `0 0 16px ${team.brandColor}80` : 'none',
-          border: `2px solid ${team.brandColor}50`,
-        }}
-      >
-        {logoUrl ? (
-          <img
-            src={logoUrl}
-            alt={`${team.name} logo`}
-            className="w-9 h-9 object-contain"
-            loading="lazy"
-          />
-        ) : (
-          <span
-            className="text-[11px] font-black tracking-tighter"
-            style={{ color: team.brandColor }}
-          >
-            {team.logoText}
-          </span>
-        )}
+      {/* Logo with rotating gradient ring */}
+      <div className="logo-ring-wrapper">
+        <div
+          className={`relative z-10 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-500 overflow-hidden ${isSelected ? 'scale-110' : ''}`}
+          style={{
+            background: `radial-gradient(circle, ${team.bgAccent} 0%, rgba(5,7,10,0.95) 75%)`,
+            boxShadow: isSelected ? `0 0 18px ${team.brandColor}90` : 'none',
+            border: `2px solid ${team.brandColor}50`,
+          }}
+        >
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={`${team.name} logo`}
+              className="w-9 h-9 object-contain"
+              loading="lazy"
+            />
+          ) : (
+            <span
+              className="text-[11px] font-black tracking-tighter"
+              style={{ color: team.brandColor }}
+            >
+              {team.logoText}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Team name */}
@@ -103,7 +124,7 @@ export const TeamCard: React.FC<TeamCardProps> = ({
         {team.name}
       </h3>
 
-      {/* Support rate */}
+      {/* Support rate with flowing gradient bar */}
       <div className="w-full mt-2">
         <div className="flex justify-between items-center mb-1">
           <span
@@ -119,33 +140,33 @@ export const TeamCard: React.FC<TeamCardProps> = ({
             style={{
               width: `${Math.min(displaySupportRate * 3, 100)}%`,
               background: isSelected
-                ? 'linear-gradient(90deg,#B51220,#FF3B45)'
+                ? 'linear-gradient(90deg,#B51220,#FF3B45,#FF8086)'
                 : `linear-gradient(90deg, ${team.brandColor}55, ${team.brandColor})`,
+              backgroundSize: '200% 100%',
+              animation: 'shimmer 2s linear infinite',
             }}
           />
         </div>
       </div>
 
-      {/* Vote button */}
+      {/* Vote button with ripple */}
       <button
+        ref={btnRef}
         disabled={hasVotedAny}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (canVote) onVote(team.id);
-        }}
+        onClick={handleClick}
         className={`
-          w-full mt-2.5 py-[5px] rounded text-[10px] font-black uppercase tracking-wider transition-all duration-300
+          ripple-container w-full mt-2.5 py-[5px] rounded text-[10px] font-black uppercase tracking-wider transition-all duration-300
           slanted-cut-br
           ${isSelected
             ? 'text-white'
             : hasVotedAny
               ? 'bg-transparent text-white/20 border border-white/10 cursor-default'
-              : 'bg-transparent text-white border border-white/20 hover:bg-white/8 active:bg-white/15'
+              : 'bg-transparent text-white border border-white/20 hover:bg-white/8 active:scale-95'
           }
         `}
         style={
           isSelected
-            ? { background: 'linear-gradient(90deg, #B51220, #FF3B45)', boxShadow: '0 0 10px rgba(255,59,69,0.4)' }
+            ? { background: 'linear-gradient(90deg, #B51220, #FF3B45)', boxShadow: '0 0 12px rgba(255,59,69,0.45)' }
             : {}
         }
       >
