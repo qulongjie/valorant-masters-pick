@@ -111,11 +111,7 @@ export const addPointHistory = (description: string, points: number): void => {
 const VOTE_POOL_KEY = "valorant_london_vote_pool";
 
 // 预埋基础票数，模拟已有社区投票数据
-const SEED_VOTES: Record<string, number> = {
-  EDG: 186, PRX: 142, G2: 128, TH: 95,
-  DRG: 73, VIT: 58, XLG: 89, NRG: 64,
-  GE: 41, FUT: 37, FS: 52, LEV: 45,
-};
+const SEED_VOTES: Record<string, number> = {};
 
 export const getSupportRates = (): Record<string, number> => {
   const raw = localStorage.getItem(VOTE_POOL_KEY);
