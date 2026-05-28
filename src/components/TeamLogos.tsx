@@ -1,15 +1,16 @@
-// Official team logos from the lolesports CDN
+const BASE = import.meta.env.BASE_URL;
+
 export const TEAM_LOGO_URLS: Record<string, string> = {
-  EDG: '/team_logos/edg.png',
-  PRX: '/team_logos/prx.png',
-  G2: '/team_logos/g2.png',
-  TH: '/team_logos/th.png',
-  DRG: '/team_logos/drg.png',
-  VIT: '/team_logos/vit.png',
-  XLG: '/team_logos/xlg.png',
-  NRG: '/team_logos/nrg.png',
-  GE: '/team_logos/ge.png',
-  FUT: '/team_logos/fut.png',
-  FS: '/team_logos/fs.png',
-  LEV: '/team_logos/lev.png',
+  EDG: `${BASE}team_logos/edg.png`,
+  PRX: `${BASE}team_logos/prx.png`,
+  G2: `${BASE}team_logos/g2.png`,
+  TH: `${BASE}team_logos/th.png`,
+  DRG: `${BASE}team_logos/drg.png`,
+  VIT: `${BASE}team_logos/vit.png`,
+  XLG: `${BASE}team_logos/xlg.png`,
+  NRG: `${BASE}team_logos/nrg.png`,
+  GE: `${BASE}team_logos/ge.png`,
+  FUT: `${BASE}team_logos/fut.png`,
+  FS: `${BASE}team_logos/fs.png`,
+  LEV: `${BASE}team_logos/lev.png`,
 };
