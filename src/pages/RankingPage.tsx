@@ -4,11 +4,14 @@ import { RankingTable } from '../components/RankingTable';
 import { Disclaimer } from '../components/Disclaimer';
 import { Zap } from 'lucide-react';
 
-export const RankingPage: React.FC = () => {
+interface RankingPageProps {
+  supportRates?: Record<string, number>;
+}
+
+export const RankingPage: React.FC<RankingPageProps> = ({ supportRates }) => {
   return (
-    <div className="w-full flex flex-col select-none animate-fade-in">
+    <div className="w-full flex flex-col select-none page-enter">
       
-      {/* 1. Header block */}
       <div className="flex flex-col text-left mb-5 mt-2">
         <div className="flex items-center gap-1 bg-[#0F1218]/45 border border-white/5 text-grey-secondary px-2.5 py-0.5 rounded-full w-fit mb-2 text-[8px] font-bold uppercase tracking-wider">
           <Zap className="w-3 h-3 text-valorant" />
@@ -22,10 +25,8 @@ export const RankingPage: React.FC = () => {
         </p>
       </div>
 
-      {/* 2. Interactive Ranking board */}
-      <RankingTable teams={TEAMS} />
+      <RankingTable teams={TEAMS} initialSupportRates={supportRates} />
 
-      {/* 3. Bottom Legal Disclaimer */}
       <Disclaimer />
     </div>
   );

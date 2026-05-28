@@ -1,36 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Team } from '../data/teams';
 import { TEAM_LOGO_URLS } from './TeamLogos';
 import { ArrowUp, ArrowDown, Activity } from 'lucide-react';
 
 interface RankingTableProps {
   teams: Team[];
+  initialSupportRates?: Record<string, number>;
 }
 
 type RegionFilter = 'ALL' | 'CN' | 'Pacific' | 'EMEA' | 'Americas';
 
-export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
+export const RankingTable: React.FC<RankingTableProps> = ({ teams, initialSupportRates }) => {
   const [activeFilter, setActiveFilter] = useState<RegionFilter>('ALL');
-  const [simulatedTeams, setSimulatedTeams] = useState<Team[]>(teams);
+  const ratesRef = useRef(initialSupportRates);
+  useEffect(() => { ratesRef.current = initialSupportRates; }, [initialSupportRates]);
+
+  const [simulatedTeams, setSimulatedTeams] = useState<Team[]>(() => {
+    if (initialSupportRates && Object.keys(initialSupportRates).length > 0) {
+      return teams.map(t => ({
+        ...t,
+        rankingSupportRate: initialSupportRates[t.id] ?? 0,
+      }));
+    }
+    return teams;
+  });
 
   const filteredTeams = simulatedTeams
-    .filter((team) => {
-      if (activeFilter === 'ALL') return true;
-      return team.region === activeFilter;
-    })
+    .filter((team) => activeFilter === 'ALL' || team.region === activeFilter)
     .sort((a, b) => b.rankingSupportRate - a.rankingSupportRate);
 
-  // Live simulation
+  // Live simulation + sync with real rates
   useEffect(() => {
     const interval = setInterval(() => {
       setSimulatedTeams((prevTeams) => {
+        const rates = ratesRef.current;
         return prevTeams.map((team) => {
+          // Sync with real vote rates
+          const realRate = rates?.[team.id];
+          const baseRate = realRate !== undefined && realRate > 0 ? realRate : team.rankingSupportRate;
+
           if (Math.random() > 0.85) {
             const isIncrease = Math.random() > 0.4;
             const changeAmount = Number((Math.random() * 0.1).toFixed(2));
             const newSupportRate = isIncrease 
-              ? Number((team.rankingSupportRate + changeAmount).toFixed(1))
-              : Number(Math.max(0, team.rankingSupportRate - changeAmount).toFixed(1));
+              ? Number((baseRate + changeAmount).toFixed(1))
+              : Number(Math.max(0, baseRate - changeAmount).toFixed(1));
             const newChangeRate = isIncrease
               ? Number((team.changeRate + changeAmount).toFixed(2))
               : Number((team.changeRate - changeAmount).toFixed(2));
@@ -40,7 +54,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
               changeRate: Number(newChangeRate.toFixed(1))
             };
           }
-          return team;
+          return { ...team, rankingSupportRate: baseRate };
         });
       });
     }, 5000);
@@ -50,33 +64,16 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
   const getRankBadge = (index: number) => {
     switch (index) {
       case 0:
-        return (
-          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#FFD700] to-[#B8860B] flex items-center justify-center text-[10px] font-black text-[#05070A] shadow-[0_0_8px_rgba(255,215,0,0.5)]">
-            1
-          </div>
-        );
+        return <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#FFD700] to-[#B8860B] flex items-center justify-center text-[10px] font-black text-[#05070A] shadow-[0_0_8px_rgba(255,215,0,0.5)]">1</div>;
       case 1:
-        return (
-          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#C0C0C0] to-[#708090] flex items-center justify-center text-[10px] font-black text-[#05070A] shadow-[0_0_8px_rgba(192,192,192,0.3)]">
-            2
-          </div>
-        );
+        return <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#C0C0C0] to-[#708090] flex items-center justify-center text-[10px] font-black text-[#05070A] shadow-[0_0_8px_rgba(192,192,192,0.3)]">2</div>;
       case 2:
-        return (
-          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#CD7F32] to-[#8B4513] flex items-center justify-center text-[10px] font-black text-[#05070A] shadow-[0_0_8px_rgba(205,127,50,0.3)]">
-            3
-          </div>
-        );
+        return <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#CD7F32] to-[#8B4513] flex items-center justify-center text-[10px] font-black text-[#05070A] shadow-[0_0_8px_rgba(205,127,50,0.3)]">3</div>;
       default:
-        return (
-          <span className="text-xs font-bold text-grey-secondary/80 w-5 text-center">
-            {index + 1}
-          </span>
-        );
+        return <span className="text-xs font-bold text-grey-secondary/80 w-5 text-center">{index + 1}</span>;
     }
   };
 
-  // 药丸切换器
   const filters: { id: RegionFilter; label: string }[] = [
     { id: 'ALL', label: '总榜' },
     { id: 'CN', label: 'CN' },
@@ -88,7 +85,6 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
   return (
     <div className="w-full flex flex-col select-none">
       
-      {/* 药丸切换器 */}
       <div className="flex gap-1.5 overflow-x-auto pb-3.5 scrollbar-none scroll-smooth">
         {filters.map((f) => (
           <button
@@ -105,10 +101,8 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
         ))}
       </div>
 
-      {/* Leaderboard */}
       <div className="glass-panel rounded-2xl overflow-hidden border border-white/10 shadow-glass">
         
-        {/* Header */}
         <div className="grid grid-cols-12 px-4 py-3 bg-white/[0.02] border-b border-white/5 text-[9px] font-black tracking-widest text-grey-secondary uppercase">
           <div className="col-span-2 text-left">排名</div>
           <div className="col-span-5 text-left">队伍</div>
@@ -116,10 +110,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
           <div className="col-span-2 text-right">变化</div>
         </div>
 
-        {/* Body */}
         <div className="divide-y divide-white/5 max-h-[440px] overflow-y-auto">
           {filteredTeams.map((team) => {
-            const globalRankIndex = simulatedTeams
+            const globalRankIndex = [...simulatedTeams]
               .sort((a, b) => b.rankingSupportRate - a.rankingSupportRate)
               .findIndex((t) => t.id === team.id);
 
@@ -128,11 +121,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
             const absoluteChange = Math.abs(team.changeRate).toFixed(1);
             const logoUrl = TEAM_LOGO_URLS[team.id];
 
-            // Top-3 渐变边框
             const rowBorderClass = globalRankIndex === 0 ? 'row-gold'
               : globalRankIndex === 1 ? 'row-silver'
-              : globalRankIndex === 2 ? 'row-bronze'
-              : '';
+              : globalRankIndex === 2 ? 'row-bronze' : '';
 
             return (
               <div 
@@ -142,7 +133,6 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
                 <div className="col-span-2 flex justify-start items-center">
                   {getRankBadge(globalRankIndex)}
                 </div>
-
                 <div className="col-span-5 flex items-center gap-2.5">
                   <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${team.color} p-[1px] flex items-center justify-center flex-shrink-0 shadow overflow-hidden`}>
                     <div className="w-full h-full rounded-full bg-dark-card flex items-center justify-center overflow-hidden">
@@ -154,72 +144,44 @@ export const RankingTable: React.FC<RankingTableProps> = ({ teams }) => {
                     </div>
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="text-xs font-black text-white tracking-wide uppercase">
-                      {team.name}
-                    </span>
-                    <span className="text-[7.5px] text-grey-secondary font-bold tracking-widest uppercase leading-none mt-0.5">
-                      {team.region}
-                    </span>
+                    <span className="text-xs font-black text-white tracking-wide uppercase">{team.name}</span>
+                    <span className="text-[7.5px] text-grey-secondary font-bold tracking-widest uppercase leading-none mt-0.5">{team.region}</span>
                   </div>
                 </div>
-
-                {/* 支持率 + 迷你柱状图 */}
                 <div className="col-span-3 text-right">
-                  <div className="text-xs font-extrabold text-white tracking-tighter">
-                    {team.rankingSupportRate.toFixed(1)}%
-                  </div>
+                  <div className="text-xs font-extrabold text-white tracking-tighter">{team.rankingSupportRate.toFixed(1)}%</div>
                   <div className="w-full h-[4px] bg-white/5 rounded-full mt-1 ml-auto overflow-hidden max-w-[60px]">
-                    <div 
-                      className="h-full rounded-full bg-valorant shadow-red-glow transition-all duration-700"
-                      style={{ width: `${Math.max(team.rankingSupportRate * 2.5, 0)}%` }}
-                    />
+                    <div className="h-full rounded-full bg-valorant shadow-red-glow transition-all duration-700"
+                         style={{ width: `${Math.max(team.rankingSupportRate * 2.5, 0)}%` }} />
                   </div>
                 </div>
-
-                {/* 变化 — 弹跳箭头 */}
                 <div className="col-span-2 flex justify-end items-center gap-0.5 text-right">
                   {isUp && (
                     <>
                       <ArrowUp className="w-3 h-3 text-valorant animate-bounce-arrow" strokeWidth={3} />
-                      <span className="text-[10px] font-extrabold text-valorant tracking-tight">
-                        {absoluteChange}%
-                      </span>
+                      <span className="text-[10px] font-extrabold text-valorant tracking-tight">{absoluteChange}%</span>
                     </>
                   )}
                   {isDown && (
                     <>
                       <ArrowDown className="w-3 h-3 text-grey-secondary/60" strokeWidth={3} />
-                      <span className="text-[10px] font-bold text-grey-secondary/70 tracking-tight">
-                        {absoluteChange}%
-                      </span>
+                      <span className="text-[10px] font-bold text-grey-secondary/70 tracking-tight">{absoluteChange}%</span>
                     </>
                   )}
-                  {!isUp && !isDown && (
-                    <span className="text-[9px] font-semibold text-grey-secondary/50 pr-1.5">
-                      0%
-                    </span>
-                  )}
+                  {!isUp && !isDown && <span className="text-[9px] font-semibold text-grey-secondary/50 pr-1.5">0%</span>}
                 </div>
               </div>
             );
           })}
-
-          {filteredTeams.length === 0 && (
-            <div className="py-8 text-center text-xs text-grey-secondary font-medium">
-              无该赛区参赛队伍数据
-            </div>
-          )}
+          {filteredTeams.length === 0 && <div className="py-8 text-center text-xs text-grey-secondary font-medium">无该赛区参赛队伍数据</div>}
         </div>
 
-        {/* Footer — 脉冲光效 */}
         <div className="px-4 py-2.5 bg-white/[0.01] border-t border-white/5 flex items-center justify-center gap-1.5">
           <div className="relative">
             <Activity className="w-3 h-3 text-valorant" />
             <div className="absolute inset-0 w-3 h-3 bg-valorant/40 rounded-full animate-ping" />
           </div>
-          <span className="text-[8px] text-grey-secondary/60 font-semibold uppercase tracking-wider">
-            数据从0开始，每分钟模拟更新
-          </span>
+          <span className="text-[8px] text-grey-secondary/60 font-semibold uppercase tracking-wider">数据从0开始，每分钟模拟更新</span>
         </div>
       </div>
     </div>

@@ -112,7 +112,7 @@ function App() {
       case 'predict':
         return <PredictPage predictions={predictions} onSubmitPrediction={handleSubmitPrediction} onViewResult={(matchId) => { setSelectedMatchId(matchId); setActiveTab('result'); }} />;
       case 'ranking':
-        return <RankingPage />;
+        return <RankingPage supportRates={supportRates} />;
       case 'profile':
         if (!profile) return null;
         return <ProfilePage profile={profile} predictions={predictions} onNavigateToTab={(tab) => setActiveTab(tab)} onViewResult={(matchId) => { setSelectedMatchId(matchId); setActiveTab('result'); }} onUpdateProfile={handleUpdateProfile} onShowToast={showToast} />;
